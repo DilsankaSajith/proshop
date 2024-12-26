@@ -20,9 +20,16 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ShippingScreen from './screens/ShippingScreen';
 import PrivateRoute from './components/PrivateRoute';
+import AdminRoute from './components/AdminRoute';
 import PaymentScreen from './screens/PaymentScreen';
 import PlaceOrderScreen from './screens/PlaceOrderScreen';
 import OrderDetailsScreen from './screens/OrderDetailsScreen';
+import ProfileScreen from './screens/ProfileScreen';
+import OrderListScreen from './screens/admin/OrderListScreen';
+import ProductsListScreen from './screens/admin/ProductsListScreen';
+import ProductEditScreen from './screens/admin/ProductEditScreen';
+import UserListScreen from './screens/admin/UserListScreen';
+import UserEditScreen from './screens/admin/UserEditScreen';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -40,6 +47,21 @@ const router = createBrowserRouter(
         <Route path="/payment" element={<PaymentScreen />}></Route>
         <Route path="/placeorder" element={<PlaceOrderScreen />}></Route>
         <Route path="/orders/:id" element={<OrderDetailsScreen />}></Route>
+        <Route path="/profile" element={<ProfileScreen />}></Route>
+      </Route>
+
+      <Route path="" element={<AdminRoute />}>
+        <Route path="/admin/orderList" element={<OrderListScreen />}></Route>
+        <Route
+          path="/admin/productList"
+          element={<ProductsListScreen />}
+        ></Route>
+        <Route
+          path="/admin/product/:id/edit"
+          element={<ProductEditScreen />}
+        ></Route>
+        <Route path="/admin/userList" element={<UserListScreen />}></Route>
+        <Route path="/admin/user/:id/edit" element={<UserEditScreen />}></Route>
       </Route>
     </Route>
   )

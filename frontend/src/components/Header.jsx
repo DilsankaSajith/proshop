@@ -4,6 +4,7 @@ import { FaShoppingCart, FaUser } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLogoutMutation } from '../slices/usersApiSlice';
 import { logout } from '../slices/authSlice';
+import { clearShippingAddress } from '../slices/cartSlice';
 import logo from '../assets/logo.png';
 
 const Header = () => {
@@ -20,6 +21,7 @@ const Header = () => {
       await logoutApiCall().unwrap();
       dispatch(logout());
       navigate('/login');
+      dispatch(clearShippingAddress());
     } catch (error) {
       console.log(error);
     }
@@ -58,6 +60,19 @@ const Header = () => {
                 <Nav.Link href="/login">
                   <FaUser /> Sign In
                 </Nav.Link>
+              )}
+              {userInfo && userInfo.isAdmin && (
+                <NavDropdown title="Admin" id="adminmenu">
+                  <NavDropdown.Item as={Link} to={'/admin/productList'}>
+                    Products
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to={'/admin/userList'}>
+                    Users
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to={'/admin/orderList'}>
+                    Orders
+                  </NavDropdown.Item>
+                </NavDropdown>
               )}
             </Nav>
           </Navbar.Collapse>

@@ -1,0 +1,104 @@
+import { Table, Button, Row, Col, Nav } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import {
+  useGetProductsQuery,
+  useCreateProductMutation,
+  useDeleteProductMutation,
+} from '../../slices/productsApiSlice';
+import { toast } from 'react-toastify';
+import Message from '../../components/Message';
+import Loader from '../../components/Loader';
+
+const ProductsListScreen = () => {
+  const { data: products, isLoading, error, refetch } = useGetProductsQuery();
+  const [createProduct, { isLoading: loadingCreate }] =
+    useCreateProductMutation();
+  const [deleteProduct, { isLoading: loadingDelete }] =
+    useDeleteProductMutation();
+
+  const createProductHandler = async () => {
+    if (window.confirm('Are you sure you want to add a new product?')) {
+      try {
+        await createProduct();
+        refetch();
+      } catch (err) {
+        toast.error(err?.data?.message || err?.error);
+      }
+    }
+  };
+
+  const deleteHandler = async (id) => {
+    if (window.confirm('Are you sure?')) {
+      try {
+        await deleteProduct(id);
+        toast.success('Product deleted');
+        refetch();
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  };
+
+  return (
+    <>
+      <Row className="btn-sm align-items-center">
+        <Col>
+          <h2>Products</h2>
+        </Col>
+        <Col className="text-end">
+          <Button className="btn-sm m-3" onClick={createProductHandler}>
+            <FaEdit /> Create Product
+          </Button>
+        </Col>
+      </Row>
+      {loadingCreate && <Loader />}
+      {loadingDelete && <Loader />}
+      {isLoading ? (
+        <Loader />
+      ) : error ? (
+        <Message varient="danger">{error}</Message>
+      ) : (
+        <Table striped hover responsive className="table-sm">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>NAME</th>
+              <th>PRICE</th>
+              <th>CATEGORY</th>
+              <th>BRAND</th>
+              <th></th>
+            </tr>
+            {products.map((product) => (
+              <tr key={product._id}>
+                <td>{product._id}</td>
+                <td>{product.name}</td>
+                <td>${product.price}</td>
+                <td>{product.category}</td>
+                <td>{product.brand}</td>
+                <td>
+                  <Link to={`/admin/product/${product._id}/edit`}>
+                    <Button className="btn-sm mx-2" variant="light">
+                      <FaEdit />
+                    </Button>
+                  </Link>
+                  <Button
+                    className="btn-sm mx-2"
+                    variant="danger"
+                    onClick={() => {
+                      deleteHandler(product._id);
+                    }}
+                  >
+                    <FaTrash style={{ color: 'white' }} />
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </thead>
+        </Table>
+      )}
+    </>
+  );
+};
+
+export default ProductsListScreen;
