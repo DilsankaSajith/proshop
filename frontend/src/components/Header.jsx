@@ -6,6 +6,7 @@ import { useLogoutMutation } from '../slices/usersApiSlice';
 import { logout } from '../slices/authSlice';
 import { clearShippingAddress } from '../slices/cartSlice';
 import logo from '../assets/logo.png';
+import SearchBox from './SearchBox';
 
 const Header = () => {
   const { cartItems } = useSelector((store) => store.cart);
@@ -38,6 +39,7 @@ const Header = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
+              <SearchBox />
               <Nav.Link href="/cart">
                 <FaShoppingCart /> Cart
                 {cartItems.length > 0 && (
